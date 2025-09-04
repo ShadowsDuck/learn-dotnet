@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Data;
+using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace learn_dotnet.Controllers
@@ -22,7 +23,7 @@ namespace learn_dotnet.Controllers
         [HttpGet]
         public IActionResult GetAllStocks()
         {
-            var stocks = _context.Stocks.ToList();
+            var stocks = _context.Stocks.ToList().Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
 
             return Ok(stocks);
         }
@@ -37,7 +38,7 @@ namespace learn_dotnet.Controllers
                 return NotFound();
             }
 
-            return Ok(stock);
+            return Ok(stock.ToStockDto()); // map เป็น StockDto
         }
     }
 }

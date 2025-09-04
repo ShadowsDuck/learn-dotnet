@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddControllers(); // ลงทะเบียน service สำหรับ controller
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -19,6 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers(); // บอก framework ให้ใช้ routes จาก controllers
 
 app.Run();
 

@@ -48,7 +48,7 @@ namespace learn_dotnet.Migrations
 
                     b.HasIndex("StockId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("learn_dotnet.Models.Stock", b =>
@@ -82,7 +82,7 @@ namespace learn_dotnet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stock");
+                    b.ToTable("Stocks");
                 });
 
             modelBuilder.Entity("learn_dotnet.Models.Comment", b =>

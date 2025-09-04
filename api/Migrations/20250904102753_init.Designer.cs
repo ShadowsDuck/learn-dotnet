@@ -12,7 +12,7 @@ using learn_dotnet.Data;
 namespace learn_dotnet.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250903152325_init")]
+    [Migration("20250904102753_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -51,7 +51,7 @@ namespace learn_dotnet.Migrations
 
                     b.HasIndex("StockId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("learn_dotnet.Models.Stock", b =>
@@ -85,7 +85,7 @@ namespace learn_dotnet.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stock");
+                    b.ToTable("Stocks");
                 });
 
             modelBuilder.Entity("learn_dotnet.Models.Comment", b =>

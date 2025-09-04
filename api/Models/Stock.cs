@@ -16,7 +16,8 @@ namespace learn_dotnet.Models
         public decimal Purchase { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal LastDividend { get; set; }
-        public string Industry { get; set; } = string.Empty;
+        public string Industry { get; set; } = string.Empty; // string.Empty = "" (string ว่าง) 
+        // ใส่ไว้เพื่อ ให้ property เริ่มต้นเป็น string ว่างแทน null → ลดปัญหา null check
         public long MarketCap { get; set; }
 
         // Relation (one-to-many)

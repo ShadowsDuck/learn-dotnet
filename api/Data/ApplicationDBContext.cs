@@ -15,7 +15,7 @@ namespace learn_dotnet.Data
 
         }
 
-        public DbSet<Stock> Stock { get; set; } // DbSet<Stock> = แทนตาราง Stocks
-        public DbSet<Comment> Comment { get; set; } // DbSet<Comment> = แทนตาราง Comments
+        public DbSet<Stock> Stocks { get; set; } // DbSet<Stock> = แทนตาราง Stocks
+        public DbSet<Comment> Comments { get; set; } // DbSet<Comment> = แทนตาราง Comments
     }
 }

@@ -55,3 +55,11 @@ summary: รับคำสั่งลบจากผู้ใช้ผ่า�
 summary: เป็นการเขียนโค้ดให้ controller ทำงานแบบ asynchronous เพื่อไม่ให้บล็อกการทำงานระหว่างรอฐานข้อมูลหรือ I/O ทำให้ API รองรับผู้ใช้พร้อมกันได้มากขึ้นและทำงานได้มีประสิทธิภาพกว่าแบบ synchronous
 - Using async/await in controllers
 
+10. Repository Pattern + DI
+summary: เป็นการสร้างเลเยอร์กลางระหว่าง Controller กับ Database โดยใช้ Repository และ Interface เพื่อแยกความรับผิดชอบ
+- Create Interfaces folder
+- Create IStockRepository.cs
+- Create Repository folder
+- Create StockRepository.cs
+- Using IStockRepository in StockController.cs
+- Add Scoped service in Program.cs to use IStockRepository, StockRepository

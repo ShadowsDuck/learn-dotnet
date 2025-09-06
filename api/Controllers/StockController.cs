@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Data;
 using learn_dotnet.Dtos.Stock;
+using learn_dotnet.Interfaces;
 using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,15 +18,17 @@ namespace learn_dotnet.Controllers
         /* ASP.NET Core จะ inject ApplicationDBContext เข้ามาอัตโนมัติ 
         (เพราะเราเคยทำ builder.Services.AddDbContext<ApplicationDBContext>() ไว้) */
         private readonly ApplicationDBContext _context;
-        public StockController(ApplicationDBContext context)
+        private readonly IStockRepository _stockRepo;
+        public StockController(ApplicationDBContext context, IStockRepository stockRepo)
         {
             _context = context; // _context คือ object สำหรับ query ข้อมูลจาก Database
+            _stockRepo = stockRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllStocks()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await _stockRepo.GetAllAsync();
 
             var stockDto = stocks.Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
 

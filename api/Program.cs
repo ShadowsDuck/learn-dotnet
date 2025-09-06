@@ -1,4 +1,6 @@
 using learn_dotnet.Data;
+using learn_dotnet.Interfaces;
+using learn_dotnet.Repository;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -13,6 +15,10 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 });
 
 builder.Services.AddControllers(); // ลงทะเบียน service สำหรับ controller
+
+// บอก DI Container ว่าเวลาเจอ IStockRepository → ให้ใช้ StockRepository
+// ใช้ AddScoped = มีอายุการใช้งานต่อ 1 Request (สร้างใหม่ทุก request)
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 
 var app = builder.Build();
 

@@ -43,17 +43,55 @@ namespace learn_dotnet.Controllers
         }
 
         // [HttpPost] → บอกว่า method นี้จะถูกเรียกตอน client ส่ง POST request มาที่ /api/stocks
-        // [FromBody] → ASP.NET Core จะ map JSON body ที่ client ส่งเข้ามา → ใส่ค่าเข้าไปใน stockDto (ซึ่งคือ CreateStockRequestDto)
+        // [FromBody] → ASP.NET Core จะ map JSON body ที่ client ส่งเข้ามา → ใส่ค่าเข้าไปใน createStockDto (ซึ่งคือ CreateStockRequestDto)
         [HttpPost]
-        public IActionResult CreateStock([FromBody] CreateStockRequestDto stockDto)
+        public IActionResult CreateStock([FromBody] CreateStockRequestDto createStockDto)
         {
-            var stockModel = stockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
+            var stockModel = createStockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
             _context.Stocks.Add(stockModel);
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, stockModel.ToStockDto());
             // nameof(GetStockById), new { id = stockModel.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
             // stockModel.ToStockDto() คือ payload (body) ที่ส่งกลับไปให้ user
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockDto)
+        {
+            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+            if (stockModel == null)
+            {
+                return NotFound();
+            }
+
+            stockModel.Symbol = updateStockDto.Symbol;
+            stockModel.CompanyName = updateStockDto.CompanyName;
+            stockModel.Purchase = updateStockDto.Purchase;
+            stockModel.LastDividend = updateStockDto.LastDividend;
+            stockModel.Industry = updateStockDto.Industry;
+            stockModel.MarketCap = updateStockDto.MarketCap;
+
+            _context.SaveChanges();
+
+            return Ok(stockModel.ToStockDto());
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStock([FromRoute] int id)
+        {
+            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+            if (stockModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.Stocks.Remove(stockModel);
+            _context.SaveChanges();
+
+            return NoContent(); // http status code 204 (No Content)
         }
     }
 }

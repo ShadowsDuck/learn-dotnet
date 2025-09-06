@@ -7,7 +7,6 @@ using learn_dotnet.Dtos.Stock;
 using learn_dotnet.Interfaces;
 using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace learn_dotnet.Controllers
 {
@@ -15,13 +14,9 @@ namespace learn_dotnet.Controllers
     [ApiController] // บอกว่า controller นี้คือ API controller (ไม่ใช่ MVC view controller)
     public class StockController : ControllerBase
     {
-        /* ASP.NET Core จะ inject ApplicationDBContext เข้ามาอัตโนมัติ 
-        (เพราะเราเคยทำ builder.Services.AddDbContext<ApplicationDBContext>() ไว้) */
-        private readonly ApplicationDBContext _context;
         private readonly IStockRepository _stockRepo;
-        public StockController(ApplicationDBContext context, IStockRepository stockRepo)
+        public StockController(IStockRepository stockRepo)
         {
-            _context = context; // _context คือ object สำหรับ query ข้อมูลจาก Database
             _stockRepo = stockRepo;
         }
 
@@ -29,16 +24,14 @@ namespace learn_dotnet.Controllers
         public async Task<IActionResult> GetAllStocks()
         {
             var stocks = await _stockRepo.GetAllAsync();
-
             var stockDto = stocks.Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
-
             return Ok(stockDto);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStockById([FromRoute] int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepo.GetByIdAsync(id);
 
             if (stock == null)
             {
@@ -54,11 +47,7 @@ namespace learn_dotnet.Controllers
         public async Task<IActionResult> CreateStock([FromBody] CreateStockRequestDto createStockDto)
         {
             var stockModel = createStockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
-
-            await _context.Stocks.AddAsync(stockModel);
-
-            await _context.SaveChangesAsync();
-
+            await _stockRepo.CreateAsync(stockModel);
             return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, stockModel.ToStockDto());
             // nameof(GetStockById), new { id = stockModel.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
             // stockModel.ToStockDto() คือ payload (body) ที่ส่งกลับไปให้ user
@@ -67,21 +56,12 @@ namespace learn_dotnet.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockDto)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stockModel = await _stockRepo.UpdateAsync(id, updateStockDto);
 
             if (stockModel == null)
             {
                 return NotFound();
             }
-
-            stockModel.Symbol = updateStockDto.Symbol;
-            stockModel.CompanyName = updateStockDto.CompanyName;
-            stockModel.Purchase = updateStockDto.Purchase;
-            stockModel.LastDividend = updateStockDto.LastDividend;
-            stockModel.Industry = updateStockDto.Industry;
-            stockModel.MarketCap = updateStockDto.MarketCap;
-
-            await _context.SaveChangesAsync();
 
             return Ok(stockModel.ToStockDto());
         }
@@ -89,16 +69,12 @@ namespace learn_dotnet.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stockModel = await _stockRepo.DeleteAsync(id);
 
             if (stockModel == null)
             {
                 return NotFound();
             }
-
-            _context.Stocks.Remove(stockModel);
-
-            await _context.SaveChangesAsync();
 
             return NoContent(); // http status code 204 (No Content)
         }

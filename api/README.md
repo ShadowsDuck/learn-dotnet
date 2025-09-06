@@ -63,3 +63,9 @@ summary: เป็นการสร้างเลเยอร์กลาง�
 - Create StockRepository.cs
 - Using IStockRepository in StockController.cs
 - Add Scoped service in Program.cs to use IStockRepository, StockRepository
+
+11. Refactor To Repository
+summary: เป็นการย้าย logic การเข้าถึงฐานข้อมูลจาก Controller ไปไว้ใน Repository และเรียกใช้ method เหล่านี้จาก Controller แทนการเขียน query หรือ operation ตรง ๆ
+- Create GetByIdAsync, CreateAsync, UpdateAsync, DeleteAsync methods in IStockRepository.cs
+- Move methods from StockController.cs to StockRepository.cs
+- Using StockRepository methods in StockController.cs

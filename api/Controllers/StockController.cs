@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Data;
+using learn_dotnet.Dtos.Stock;
 using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,20 @@ namespace learn_dotnet.Controllers
             }
 
             return Ok(stock.ToStockDto()); // map เป็น StockDto
+        }
+
+        // [HttpPost] → บอกว่า method นี้จะถูกเรียกตอน client ส่ง POST request มาที่ /api/stocks
+        // [FromBody] → ASP.NET Core จะ map JSON body ที่ client ส่งเข้ามา → ใส่ค่าเข้าไปใน stockDto (ซึ่งคือ CreateStockRequestDto)
+        [HttpPost]
+        public IActionResult CreateStock([FromBody] CreateStockRequestDto stockDto)
+        {
+            var stockModel = stockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
+            _context.Stocks.Add(stockModel);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, stockModel.ToStockDto());
+            // nameof(GetStockById), new { id = stockModel.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
+            // stockModel.ToStockDto() คือ payload (body) ที่ส่งกลับไปให้ user
         }
     }
 }

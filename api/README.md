@@ -34,3 +34,9 @@ summary: เป็นการ "จัดระเบียบ" ข้อมู�
 - Create Mappers folder
 - Create StockMappers.cs
 - Use mappers in controllers
+
+6. POST (Create)
+- Create CreateStockRequestDto.cs
+- Create ToStockFromCreateDto() method in StockMappers.cs
+- HttpPost in StockController.cs
+- Use mappers in HttpPost controllers

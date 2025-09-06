@@ -9,7 +9,7 @@ namespace learn_dotnet.Mappers
 {
     public static class StockMappers // ฟังก์ชันหรือ method ที่ทำหน้าที่ แปลงระหว่าง Entity ↔ DTO
     {
-        public static StockDto ToStockDto(this Stock stockModel)
+        public static StockDto ToStockDto(this Stock stockModel) // ใช้สำหรับ ส่งออกไปยัง Client
         {
             return new StockDto
             {
@@ -20,6 +20,19 @@ namespace learn_dotnet.Mappers
                 LastDividend = stockModel.LastDividend,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap
+            };
+        }
+
+        public static Stock ToStockFromCreateDto(this CreateStockRequestDto stockDto) // ใช้สำหรับ รับข้อมูลจาก Client
+        {
+            return new Stock
+            {
+                Symbol = stockDto.Symbol,
+                CompanyName = stockDto.CompanyName,
+                Purchase = stockDto.Purchase,
+                LastDividend = stockDto.LastDividend,
+                Industry = stockDto.Industry,
+                MarketCap = stockDto.MarketCap
             };
         }
     }

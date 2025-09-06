@@ -6,6 +6,7 @@ using learn_dotnet.Data;
 using learn_dotnet.Dtos.Stock;
 using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace learn_dotnet.Controllers
 {
@@ -22,17 +23,19 @@ namespace learn_dotnet.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllStocks()
+        public async Task<IActionResult> GetAllStocks()
         {
-            var stocks = _context.Stocks.ToList().Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
+            var stocks = await _context.Stocks.ToListAsync();
 
-            return Ok(stocks);
+            var stockDto = stocks.Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
+
+            return Ok(stockDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetStockById([FromRoute] int id)
+        public async Task<IActionResult> GetStockById([FromRoute] int id)
         {
-            var stock = _context.Stocks.Find(id);
+            var stock = await _context.Stocks.FindAsync(id);
 
             if (stock == null)
             {
@@ -45,11 +48,13 @@ namespace learn_dotnet.Controllers
         // [HttpPost] → บอกว่า method นี้จะถูกเรียกตอน client ส่ง POST request มาที่ /api/stocks
         // [FromBody] → ASP.NET Core จะ map JSON body ที่ client ส่งเข้ามา → ใส่ค่าเข้าไปใน createStockDto (ซึ่งคือ CreateStockRequestDto)
         [HttpPost]
-        public IActionResult CreateStock([FromBody] CreateStockRequestDto createStockDto)
+        public async Task<IActionResult> CreateStock([FromBody] CreateStockRequestDto createStockDto)
         {
             var stockModel = createStockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
-            _context.Stocks.Add(stockModel);
-            _context.SaveChanges();
+
+            await _context.Stocks.AddAsync(stockModel);
+
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, stockModel.ToStockDto());
             // nameof(GetStockById), new { id = stockModel.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
@@ -57,9 +62,9 @@ namespace learn_dotnet.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockDto)
+        public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockDto)
         {
-            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (stockModel == null)
             {
@@ -73,15 +78,15 @@ namespace learn_dotnet.Controllers
             stockModel.Industry = updateStockDto.Industry;
             stockModel.MarketCap = updateStockDto.MarketCap;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(stockModel.ToStockDto());
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteStock([FromRoute] int id)
+        public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stockModel = _context.Stocks.FirstOrDefault(x => x.Id == id);
+            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
             if (stockModel == null)
             {
@@ -89,7 +94,8 @@ namespace learn_dotnet.Controllers
             }
 
             _context.Stocks.Remove(stockModel);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
 
             return NoContent(); // http status code 204 (No Content)
         }

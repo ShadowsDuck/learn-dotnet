@@ -69,3 +69,7 @@ summary: เป็นการย้าย logic การเข้าถึง�
 - Create GetByIdAsync, CreateAsync, UpdateAsync, DeleteAsync methods in IStockRepository.cs
 - Move methods from StockController.cs to StockRepository.cs
 - Using StockRepository methods in StockController.cs
+
+12. Comment System
+- Create CommentController.cs, ICommentRepository.cs, CommentRepository.cs, CommentDto.cs, CommentMappers.cs
+- Using CommentRepository methods in CommentController.cs

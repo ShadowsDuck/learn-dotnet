@@ -19,6 +19,7 @@ builder.Services.AddControllers(); // ลงทะเบียน service สำ
 // บอก DI Container ว่าเวลาเจอ IStockRepository → ให้ใช้ StockRepository
 // ใช้ AddScoped = มีอายุการใช้งานต่อ 1 Request (สร้างใหม่ทุก request)
 builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 var app = builder.Build();
 

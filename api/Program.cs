@@ -21,6 +21,16 @@ builder.Services.AddControllers(); // ลงทะเบียน service สำ
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
+// เพิ่มบริการ Controller และกำหนดให้ใช้ Newtonsoft.Json
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    // ตั้งค่าให้เวลามีการ serialize object ที่มีการอ้างอิงวนซ้ำกัน (Reference Loop)
+    // เช่น A อ้าง B, B อ้างกลับไป A → ปกติจะ error
+    // ให้ "Ignore" ข้ามไป แทนที่จะ throw exception
+    // Include()
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

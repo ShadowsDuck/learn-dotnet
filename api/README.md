@@ -71,5 +71,20 @@ summary: เป็นการย้าย logic การเข้าถึง�
 - Using StockRepository methods in StockController.cs
 
 12. Comment System
+summary: เป็นการสร้างระบบความคิดเห็นโดยเพิ่ม Controller, Repository, Interface, DTO และ Mapper สำหรับ Comment เพื่อให้สามารถจัดการความคิดเห็นและใช้งานผ่าน CommentController ได้
 - Create CommentController.cs, ICommentRepository.cs, CommentRepository.cs, CommentDto.cs, CommentMappers.cs
 - Using CommentRepository methods in CommentController.cs
+
+13. Comment GET + Include()
+Comment GET
+summary: เป็นการเพิ่มเมธอด GetByIdAsync ใน Interface และ Repository สำหรับ Comment แล้วเรียกใช้งานใน CommentController เพื่อดึงความคิดเห็นตาม Id ได้โดยตรง
+- ICommentRepository.cs create GetByIdAsync
+- CommentRepository.cs create GetByIdAsync method
+- Using GetByIdAsync method in CommentController.cs
+Include()
+summary: เป็นการขยาย StockDto ให้รองรับการส่งต่อ Comment โดยเพิ่ม List ของ CommentDto และปรับ Mapper ให้แปลงข้อมูลความคิดเห็น พร้อมแก้ไข Repository ให้ Include Comment มาพร้อมกับ Stock รวมถึงติดตั้งและตั้งค่า Newtonsoft.Json เพื่อป้องกันปัญหา Reference Loop เวลาส่งข้อมูลออกไป
+- Create public List<CommentDto> Comments { get; set; } in StockDto.cs
+- Mapper Comments to ToStockDto method in StockMappers.cs
+- Include Comments in StockRepository.cs
+- Install Newtonsoft.Json from NuGet Gallery
+- Add Newtonsoft.Json service in Program.cs

@@ -58,5 +58,20 @@ namespace learn_dotnet.Controllers
             return CreatedAtAction(nameof(GetCommentById), new { id = newComment.Id },
             newComment.ToCommentDto());
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateComment(
+            [FromRoute] int id,
+            [FromBody] UpdateCommentRequestDto updateCommentDto)
+        {
+            var comment = await _commentRepo.UpdateAsync(id, updateCommentDto.ToCommentFromUpdateDto());
+
+            if (comment == null)
+            {
+                return NotFound("Comment not found");
+            }
+
+            return Ok(comment.ToCommentDto());
+        }
     }
 }

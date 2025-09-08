@@ -12,7 +12,7 @@ namespace learn_dotnet.Interfaces
         Task<List<Stock>> GetAllAsync();
         Task<Stock?> GetByIdAsync(int id); // FirstOrDefault can be Null ก็เลยใช้ Stock?
         Task<Stock> CreateAsync(Stock newStock);
-        Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockDto);
+        Task<Stock?> UpdateAsync(int id, Stock updateStock);
         Task<Stock?> DeleteAsync(int id);
         Task<bool> StockExists(int id);
     }

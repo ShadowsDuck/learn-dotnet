@@ -55,23 +55,23 @@ namespace learn_dotnet.Repository
             return _context.Stocks.AnyAsync(x => x.Id == id); // AnyAsync จะเช็คว่ามี id ไหมถ้ามีจะ return true ถ้าไม่มีจะ return false
         }
 
-        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockDto)
+        public async Task<Stock?> UpdateAsync(int id, Stock updateStock)
         {
-            var existingStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var existingStock = await _context.Stocks.FindAsync(id);
 
             if (existingStock == null)
             {
                 return null;
             }
 
-            existingStock.Symbol = updateStockDto.Symbol;
-            existingStock.CompanyName = updateStockDto.CompanyName;
-            existingStock.Purchase = updateStockDto.Purchase;
-            existingStock.LastDividend = updateStockDto.LastDividend;
-            existingStock.Industry = updateStockDto.Industry;
-            existingStock.MarketCap = updateStockDto.MarketCap;
-
+            existingStock.Symbol = updateStock.Symbol;
+            existingStock.CompanyName = updateStock.CompanyName;
+            existingStock.Purchase = updateStock.Purchase;
+            existingStock.LastDividend = updateStock.LastDividend;
+            existingStock.Industry = updateStock.Industry;
+            existingStock.MarketCap = updateStock.MarketCap;
             await _context.SaveChangesAsync();
+
             return existingStock;
         }
     }

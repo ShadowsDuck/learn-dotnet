@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using learn_dotnet.Dtos.Comment;
 using learn_dotnet.Models;
 
 namespace learn_dotnet.Interfaces
@@ -11,5 +12,6 @@ namespace learn_dotnet.Interfaces
         Task<List<Comment>> GetAllAsync();
         Task<Comment?> GetByIdAsync(int id);
         Task<Comment> CreateAsync(Comment newComment);
+        Task<Comment?> UpdateAsync(int id, Comment updateComment);
     }
 }

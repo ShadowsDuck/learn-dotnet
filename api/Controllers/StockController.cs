@@ -54,9 +54,11 @@ namespace learn_dotnet.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDto updateStockDto)
+        public async Task<IActionResult> UpdateStock(
+            [FromRoute] int id,
+            [FromBody] UpdateStockRequestDto updateStockDto)
         {
-            var stockModel = await _stockRepo.UpdateAsync(id, updateStockDto);
+            var stockModel = await _stockRepo.UpdateAsync(id, updateStockDto.ToStockFromUpdateDto());
 
             if (stockModel == null)
             {

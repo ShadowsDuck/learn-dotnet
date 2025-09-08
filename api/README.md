@@ -90,3 +90,5 @@ summary: เป็นการขยาย StockDto ให้รองรับ�
 - Add Newtonsoft.Json service in Program.cs
 
 14. 1-To-Many CREATE (Post)
+
+15. Comment UPDATE (Put), Refactor Stock UPDATE (Use Mapper)

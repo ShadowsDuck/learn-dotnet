@@ -30,5 +30,14 @@ namespace learn_dotnet.Mappers
                 StockId = stockId // ← ใส่ค่า stockId ที่มาจาก route
             };
         }
+
+        public static Comment ToCommentFromUpdateDto(this UpdateCommentRequestDto commentDto)
+        {
+            return new Comment
+            {
+                Title = commentDto.Title,
+                Content = commentDto.Content,
+            };
+        }
     }
 }

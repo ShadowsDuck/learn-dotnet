@@ -88,3 +88,5 @@ summary: เป็นการขยาย StockDto ให้รองรับ�
 - Include Comments in StockRepository.cs
 - Install Newtonsoft.Json from NuGet Gallery
 - Add Newtonsoft.Json service in Program.cs
+
+14. 1-To-Many CREATE (Post)

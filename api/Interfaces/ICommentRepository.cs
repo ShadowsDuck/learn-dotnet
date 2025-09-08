@@ -10,5 +10,6 @@ namespace learn_dotnet.Interfaces
     {
         Task<List<Comment>> GetAllAsync();
         Task<Comment?> GetByIdAsync(int id);
+        Task<Comment> CreateAsync(Comment newComment);
     }
 }

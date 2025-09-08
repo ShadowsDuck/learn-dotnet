@@ -18,11 +18,11 @@ namespace learn_dotnet.Repository
             _context = context;
         }
 
-        public async Task<Stock> CreateAsync(Stock createStockDto)
+        public async Task<Stock> CreateAsync(Stock newStock)
         {
-            await _context.Stocks.AddAsync(createStockDto);
+            await _context.Stocks.AddAsync(newStock);
             await _context.SaveChangesAsync();
-            return createStockDto;
+            return newStock;
         }
 
         public async Task<Stock?> DeleteAsync(int id)
@@ -48,6 +48,11 @@ namespace learn_dotnet.Repository
         {
             return await _context.Stocks.Include(comment => comment.Comments)
             .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<bool> StockExists(int id)
+        {
+            return _context.Stocks.AnyAsync(x => x.Id == id); // AnyAsync จะเช็คว่ามี id ไหมถ้ามีจะ return true ถ้าไม่มีจะ return false
         }
 
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockDto)

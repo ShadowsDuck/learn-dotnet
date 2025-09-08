@@ -10,13 +10,10 @@ namespace learn_dotnet.Interfaces
     public interface IStockRepository
     {
         Task<List<Stock>> GetAllAsync();
-
         Task<Stock?> GetByIdAsync(int id); // FirstOrDefault can be Null ก็เลยใช้ Stock?
-
-        Task<Stock> CreateAsync(Stock createStockDto);
-
+        Task<Stock> CreateAsync(Stock newStock);
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStockDto);
-
         Task<Stock?> DeleteAsync(int id);
+        Task<bool> StockExists(int id);
     }
 }

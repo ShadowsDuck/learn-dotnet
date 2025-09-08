@@ -17,6 +17,13 @@ namespace learn_dotnet.Repository
             _context = context;
         }
 
+        public async Task<Comment> CreateAsync(Comment newComment)
+        {
+            await _context.Comments.AddAsync(newComment);
+            await _context.SaveChangesAsync();
+            return newComment;
+        }
+
         public async Task<List<Comment>> GetAllAsync()
         {
             return await _context.Comments.ToListAsync();

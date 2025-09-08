@@ -94,3 +94,5 @@ summary: เป็นการขยาย StockDto ให้รองรับ�
 15. Comment UPDATE (Put), Refactor Stock UPDATE (Use Mapper)
 
 16. Comment DELETE
+
+16.5. DELETE Comment When Stock Deleted

@@ -17,5 +17,17 @@ namespace learn_dotnet.Data
 
         public DbSet<Stock> Stocks { get; set; } // DbSet<Stock> = แทนตาราง Stocks
         public DbSet<Comment> Comments { get; set; } // DbSet<Comment> = แทนตาราง Comments
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // ตั้งความสัมพันธ์ Stock 1 - * Comment, ถ้าลบ Stock → ลบ Comment อัตโนมัติ
+            modelBuilder.Entity<Comment>()
+                .HasOne(comment => comment.Stock)           // Comment มี Stock
+                .WithMany(stock => stock.Comments)          // Stock มีหลาย Comment
+                .HasForeignKey(comment => comment.StockId)  // FK คือ StockId
+                .OnDelete(DeleteBehavior.Cascade);          // Cascade Delete
+        }
     }
 }

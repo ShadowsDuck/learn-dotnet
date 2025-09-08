@@ -92,3 +92,5 @@ summary: เป็นการขยาย StockDto ให้รองรับ�
 14. 1-To-Many CREATE (Post)
 
 15. Comment UPDATE (Put), Refactor Stock UPDATE (Use Mapper)
+
+16. Comment DELETE

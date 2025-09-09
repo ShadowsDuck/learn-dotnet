@@ -28,7 +28,7 @@ namespace learn_dotnet.Controllers
             return Ok(stockDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetStockById([FromRoute] int id)
         {
             var stock = await _stockRepo.GetByIdAsync(id);
@@ -46,34 +46,34 @@ namespace learn_dotnet.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStock([FromBody] CreateStockRequestDto createStockDto)
         {
-            var stockModel = createStockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
-            await _stockRepo.CreateAsync(stockModel);
-            return CreatedAtAction(nameof(GetStockById), new { id = stockModel.Id }, stockModel.ToStockDto());
-            // nameof(GetStockById), new { id = stockModel.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
-            // stockModel.ToStockDto() คือ payload (body) ที่ส่งกลับไปให้ user
+            var newStock = createStockDto.ToStockFromCreateDto(); // เราแปลง DTO ที่รับเข้ามา → เป็น Stock model (entity ของ DB)
+            await _stockRepo.CreateAsync(newStock);
+            return CreatedAtAction(nameof(GetStockById), new { id = newStock.Id }, newStock.ToStockDto());
+            // nameof(GetStockById), new { id = newStock.Id } ใช้กำหนด ตำแหน่ง (Location) ของ resource ที่เพิ่งสร้าง
+            // newStock.ToStockDto() คือ payload (body) ที่ส่งกลับไปให้ user
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateStock(
             [FromRoute] int id,
             [FromBody] UpdateStockRequestDto updateStockDto)
         {
-            var stockModel = await _stockRepo.UpdateAsync(id, updateStockDto.ToStockFromUpdateDto());
+            var stock = await _stockRepo.UpdateAsync(id, updateStockDto.ToStockFromUpdateDto());
 
-            if (stockModel == null)
+            if (stock == null)
             {
                 return NotFound();
             }
 
-            return Ok(stockModel.ToStockDto());
+            return Ok(stock.ToStockDto());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stockModel = await _stockRepo.DeleteAsync(id);
+            var stock = await _stockRepo.DeleteAsync(id);
 
-            if (stockModel == null)
+            if (stock == null)
             {
                 return NotFound();
             }

@@ -29,7 +29,7 @@ namespace learn_dotnet.Controllers
             return Ok(commentDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCommentById([FromRoute] int id)
         {
             var comment = await _commentRepo.GetByIdAsync(id);
@@ -42,7 +42,7 @@ namespace learn_dotnet.Controllers
             return Ok(comment.ToCommentDto());
         }
 
-        [HttpPost("{stockId}")]
+        [HttpPost("{stockId:int}")]
         public async Task<IActionResult> CreateComment(
             [FromRoute] int stockId,
             [FromBody] CreateCommentRequestDto createCommentDto)
@@ -59,7 +59,7 @@ namespace learn_dotnet.Controllers
             newComment.ToCommentDto());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateComment(
             [FromRoute] int id,
             [FromBody] UpdateCommentRequestDto updateCommentDto)
@@ -74,7 +74,7 @@ namespace learn_dotnet.Controllers
             return Ok(comment.ToCommentDto());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
             var comment = await _commentRepo.DeleteAsync(id);

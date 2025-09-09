@@ -60,6 +60,20 @@ namespace learn_dotnet.Repository
                 // กรองข้อมูล stocks ให้เหลือเฉพาะ record ที่ CompanyName มีข้อความที่ตรงกับ query.CompanyName
             }
 
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            // ตรวจสอบว่ามีการส่งค่า SortBy มาหรือไม่ (ไม่เป็น null, ไม่ว่าง, ไม่ใช่ช่องว่างล้วน)
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                // ถ้าค่า SortBy ที่ส่งมา = "Symbol" (ไม่สนว่าเป็นตัวเล็ก/ใหญ่)
+                {
+                    stocks = query.IsDescending ?
+                        stocks.OrderByDescending(stock => stock.Symbol) :
+                        // ถ้า IsDescending = true → เรียงจาก Z ไป A
+                        stocks.OrderBy(stock => stock.Symbol);
+                    // ถ้า IsDescending = false → เรียงจาก A ไป Z
+                }
+            }
+
             return await stocks.ToListAsync();
             // Execute query จริง ๆ บนฐานข้อมูล และดึงผลลัพธ์ออกมาเป็น List<Stock>
         }

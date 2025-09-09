@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Dtos.Stock;
+using learn_dotnet.Helpers;
 using learn_dotnet.Models;
 
 namespace learn_dotnet.Interfaces
 {
     public interface IStockRepository
     {
-        Task<List<Stock>> GetAllAsync();
+        Task<List<Stock>> GetAllAsync(QueryObject query);
         Task<Stock?> GetByIdAsync(int id); // FirstOrDefault can be Null ก็เลยใช้ Stock?
         Task<Stock> CreateAsync(Stock newStock);
         Task<Stock?> UpdateAsync(int id, Stock updateStock);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Data;
 using learn_dotnet.Dtos.Stock;
+using learn_dotnet.Helpers;
 using learn_dotnet.Interfaces;
 using learn_dotnet.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,9 @@ namespace learn_dotnet.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllStocks()
+        public async Task<IActionResult> GetAllStocks([FromQuery] QueryObject query)
         {
-            var stocks = await _stockRepo.GetAllAsync();
+            var stocks = await _stockRepo.GetAllAsync(query);
             var stockDto = stocks.Select(s => s.ToStockDto()); // map แต่ละ Stock → StockDto
             return Ok(stockDto);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using learn_dotnet.Data;
 using learn_dotnet.Dtos.Stock;
+using learn_dotnet.Helpers;
 using learn_dotnet.Interfaces;
 using learn_dotnet.Models;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,28 @@ namespace learn_dotnet.Repository
             return stockModel;
         }
 
-        public Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllAsync(QueryObject query)
+        // ประกาศ method แบบ async ที่ return List ของ Stock 
+        // โดยรับ parameter query (ใช้เป็น filter เงื่อนไขการค้นหา)
         {
-            return _context.Stocks.Include(comment => comment.Comments).ToListAsync();
+            var stocks = _context.Stocks
+                .Include(comment => comment.Comments) // ดึงข้อมูล Comments ของแต่ละ Stock มาด้วย (Eager Loading)
+                .AsQueryable(); // แปลงให้เป็น IQueryable เพื่อให้ต่อเงื่อนไข Where ได้แบบ dynamic
+
+            if (!string.IsNullOrWhiteSpace(query.Symbol)) // ถ้า Symbol ใน query ไม่ว่าง
+            {
+                stocks = stocks.Where(stock => stock.Symbol.Contains(query.Symbol));
+                // กรองข้อมูล stocks ให้เหลือเฉพาะ record ที่ Symbol มีข้อความที่ตรงกับ query.Symbol
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.CompanyName)) // ถ้า CompanyName ใน query ไม่ว่าง
+            {
+                stocks = stocks.Where(stock => stock.CompanyName.Contains(query.CompanyName));
+                // กรองข้อมูล stocks ให้เหลือเฉพาะ record ที่ CompanyName มีข้อความที่ตรงกับ query.CompanyName
+            }
+
+            return await stocks.ToListAsync();
+            // Execute query จริง ๆ บนฐานข้อมูล และดึงผลลัพธ์ออกมาเป็น List<Stock>
         }
 
         public async Task<Stock?> GetByIdAsync(int id)

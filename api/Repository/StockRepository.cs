@@ -74,8 +74,14 @@ namespace learn_dotnet.Repository
                 }
             }
 
-            return await stocks.ToListAsync();
-            // Execute query จริง ๆ บนฐานข้อมูล และดึงผลลัพธ์ออกมาเป็น List<Stock>
+            // คำนวณว่าจะต้องข้าม (skip) กี่ record ก่อนจะเริ่มดึงข้อมูล
+            // เช่น ถ้า PageNumber = 3, PageSize = 10 → ต้องข้าม (3-1)*10 = 20 record แรก
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            // ใช้ Skip() ข้ามข้อมูลตามจำนวนที่คำนวณไว้ → เพื่อเลื่อนไปยังหน้าที่ต้องการ
+            // ใช้ Take() ดึงข้อมูลจำนวนตาม PageSize → จำกัดผลลัพธ์ไม่ให้เกินขนาดหน้าที่กำหนด
+            // จากนั้น ToListAsync() แปลง IQueryable → List และดึงข้อมูลจริงจาก database
+            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
